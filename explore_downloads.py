@@ -6,7 +6,7 @@ import datetime
 import requests
 
 
-def check_access(package_id, resource_id, remote=remote):
+def check_access(package_id, resource_id, remote):
     access = remote.action.initiatives_check_access(
         package_id=package_id, resource_id=resource_id
     )
@@ -43,7 +43,7 @@ for package in results["results"]:
     for resource in package["resources"]:
         url = resource["url"]
         resource_id = resource["id"]
-        if check_access(package_id, resource_id):
+        if check_access(package_id, resource_id, remote):
             resources_we_have_access_to[resource_id] = resource
         else:
             embargoed_resources[resource_id] = resource
@@ -63,7 +63,9 @@ if recent_resources:
 else:
     chosen_resource = list(resources_we_have_access_to.values())[0]
 
-resp = requests.get(chosen_resource["url"], headers={"Authorization": apikey}, stream=True)
+resp = requests.get(
+    chosen_resource["url"], headers={"Authorization": apikey}, stream=True
+)
 file_name = chosen_resource["name"]
 with open(file_name, "wb") as handle:
     handle.write(resp.content)

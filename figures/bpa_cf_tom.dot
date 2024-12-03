@@ -39,14 +39,13 @@ digraph {
     //     dummynode [label=""; color=transparent;];
     // }
 
-    bpa_species:s -> Package:n [style=invis];
 
     Package:s -> r1:n, r2:n, r3:n,r4:n;
     r1:s -> d1:n;
     r2:s -> d2:n;
     r3:s -> d3:n
 
-    bpa_species:e -> Species:w [style = dashed; arrowhead = none;];
+    bpa_species -> Species [style = dashed; arrowhead = none;];
 
     Species:s -> s1:n, s2:n;
     s1:s -> l1:n;

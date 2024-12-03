@@ -26,27 +26,70 @@ results = remote.action.package_search(
 
 
 # action shortcut
-remote.action.initiatives_check_access(package_id=package_id, resource_id=resource_id)
+# remote.action.initiatives_check_access(package_id=package_id, resource_id=resource_id)
 
 # action call (equivalent to action shortcut)
 # https://github.com/ckan/ckanapi/blob/master/README.md#remoteckan
-remote.call_action(
-    "initiatives_check_access",
-    {"package_id": str(package_id), "resource_id": str(resource_id)},
-)["success"]
+# remote.call_action(
+#     "initiatives_check_access",
+#     {"package_id": str(package_id), "resource_id": str(resource_id)},
+# )["success"]
 
-resources_we_have_access_to = {}
-embargoed_resources = {}
+
+# a "package" is a dataset
+# a "resource" is one file from the dataset
+available_resources_by_package = {}
+embargoed_resources_by_package = {}
+package_metadata = {}
 
 for package in results["results"]:
     package_id = package["id"]
+    package_metadata[package_id] = package
+    available_resources = {}
+    embargoed_resources = {}
     for resource in package["resources"]:
         url = resource["url"]
         resource_id = resource["id"]
         if check_access(package_id, resource_id, remote):
-            resources_we_have_access_to[resource_id] = resource
+            try:
+                available_resources[resource_id].append(resource)
+            except KeyError:
+                available_resources[resource_id] = [resource]
         else:
-            embargoed_resources[resource_id] = resource
+            try:
+                embargoed_resources[resource_id].append(resource)
+            except KeyError:
+                embargoed_resources[resource_id] = [resource]
+    if available_resources:
+        available_resources_by_package[package_id] = available_resources
+    if embargoed_resources:
+        embargoed_resources_by_package[package_id] = embargoed_resources
+
+
+my_package = list(available_resources_by_package.keys())[0]
+my_resource = list(available_resources_by_package[my_key].keys())[0]
+package_metadata[my_package]
+
+available_resources_by_package[my_package][my_resource][0]['url']
+
+
+for package in results["results"]:
+    try:
+        print(package["project_aim"])
+        print(package["common_name"])
+        print(package["sequencing_platform"])
+        print(package["library_id"])
+    except KeyError as e:
+        print(package.keys())
+        raise e
+
+package["name"]
+
+
+package = results["results"][0]
+package["data_context"]
+for resource in package["resources"]:
+    pass
 
 
 date_format = "%Y-%m-%dT%H:%M:%S.%f"

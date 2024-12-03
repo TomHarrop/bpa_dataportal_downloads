@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Render Graphviz to PDF",
+      "type": "shell",
+      "command": "dot",
+      "args": [
+        "-Tpdf",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}.pdf"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Render Graphviz to SVG",
+      "type": "shell",
+      "command": "dot",
+      "args": [
+        "-Tsvg",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}.svg"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Render Graphviz to PDF and SVG",
+      "dependsOn": [
+        "Render Graphviz to PDF",
+        "Render Graphviz to SVG"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

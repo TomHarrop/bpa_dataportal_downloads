@@ -26,10 +26,23 @@
       "problemMatcher": []
     },
     {
-      "label": "Render Graphviz to PDF and SVG",
+      "label": "Render Graphviz to PNG",
+      "type": "shell",
+      "command": "dot",
+      "args": [
+        "-Tpng",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}.png"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Render Graphviz",
       "dependsOn": [
         "Render Graphviz to PDF",
-        "Render Graphviz to SVG"
+        "Render Graphviz to SVG",
+        "Render Graphviz to PNG"
       ],
       "group": {
         "kind": "build",

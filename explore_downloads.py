@@ -66,12 +66,28 @@ for package in results["results"]:
         embargoed_resources_by_package[package_id] = embargoed_resources
 
 
-my_package = list(available_resources_by_package.keys())[0]
-my_resource = list(available_resources_by_package[my_key].keys())[0]
-package_metadata[my_package]
+# investigate these two packages because they are the same library run on different flowcells
+package_ids = [
+    "bpa-ausarg-pacbio-hifi-456328-m84073_231123_060607_s1",
+    "bpa-ausarg-pacbio-hifi-456328-m84073_230825_020111_s2",
+]
 
-available_resources_by_package[my_package][my_resource][0]['url']
+package_id= package_ids[0]
 
+available_resources_by_package[package_id]
+package_metadata[package_id]['specimen_id'] # returns TBA
+
+# this looks to be a systematic identifier linking the sample across packages
+package_metadata[package_id]['sample_id']
+
+
+
+
+
+[package_metadata[x]['sample_id'] for x in package_ids]
+[package_metadata[x]['library_id'] for x in package_ids]
+
+package_metadata[package_id].keys()
 
 for package in results["results"]:
     try:

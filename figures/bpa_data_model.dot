@@ -9,12 +9,12 @@ digraph {
     // size = "1,1";
     node [fontname = "lato"; shape="rect", fontsize= "10"];
 
-    point1 [label="In the data portal, each\nSample has its own Package.\nHow are Packages\nfrom the same Species linked?", color=transparent]
+    point1 [label="In the data portal, each Library has\nits own Package. Libraries are linked to\nSamples by sample_id. Runs (i.e. flowcells)\nare linked to Libraries by library_id.\n\n\n\n\n", color=transparent]
 
     subgraph cluster_rp {
         label = "\"Traditional\"\ngenome project";
         
-        Species;
+        Species [label="Specimen"];
         s1[label="Sample\ne.g. muscle"];
         s2[label="Sample\ne.g. liver"]
         l1[label="Library"];
@@ -48,9 +48,15 @@ digraph {
     s2:s -> l2:n, l3:n;
     l1:s, l2:s, l3:s -> a1:n;
 
-    Species -> Package  [constraint=true, style=invis];
-    Species -> point1 [constraint=true, style=invis];
+    s2 -> Package  [constraint=true, style=invis];
+    s2 -> point1 [constraint=true, style=invis];
     
-    s2:e -> Package:w [constraint=false, style=dashed, arrowhead=none];
+    l3:e -> Package:w [
+        constraint=false,
+        style=dashed,
+        dir=both,
+        ltail=cluster_rp,
+        lhead=cluster_bpa,
+        ];
 
 }

@@ -1,0 +1,44 @@
+digraph {
+    fontname = "lato";
+    fontsize = "10";
+    bgcolor = "white";
+    // margin = 0;
+    compound = true;
+    splines = true;
+    // This attribute applies to the graph itself
+    // size = "1,1";
+    node [fontname = "lato"; fontsize = "10";];
+    
+    subgraph {
+        rank = same;
+        
+        sample_collection [label = "Collect\nyour sample";];
+        sequencing [label = "Send it for\nsequencing";];
+        data_deposit [label = "Results automatically sent\nto BPA data portal";];
+    }
+    
+    subgraph cluster_genomeengine {
+        label = "Genome engine";
+        subgraph {
+            rank = same;
+                        
+            ingest [label = "Ingest\ndata";];
+            assembly [label = "Automated\nassembly";];
+            annotation [label = "Automated\nannotation";];
+            publication [label = "Publication";];
+        }
+    }
+
+    use [label = "Use and cite\nyour annotated genome", shape=plaintext]
+
+
+    sample_collection -> sequencing;
+    sequencing -> data_deposit;
+    data_deposit -> ingest;
+    assembly -> ingest [dir=back];
+    annotation -> assembly [dir=back];
+    publication -> annotation [dir=back];
+
+    publication -> use;
+
+}

@@ -31,6 +31,7 @@ digraph {
 
     use [label = "Use and cite\nyour annotated genome", shape=plaintext]
 
+    labs [label = "Data labs provide\nactionable insights", shape=plaintext]
 
     sample_collection -> sequencing;
     sequencing -> data_deposit;
@@ -40,5 +41,7 @@ digraph {
     publication -> annotation [dir=back];
 
     publication -> use;
+
+    ingest -> labs;
 
 }

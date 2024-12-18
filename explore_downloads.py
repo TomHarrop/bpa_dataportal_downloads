@@ -8,6 +8,7 @@ import copy
 import pandas as pd
 import json
 
+
 def check_access(package_id, resource_id, remote):
     access = remote.action.initiatives_check_access(
         package_id=package_id, resource_id=resource_id
@@ -21,10 +22,26 @@ apikey = os.getenv("BPI_APIKEY")
 sixty_days_ago = datetime.datetime.now() - datetime.timedelta(days=60)
 remote = ckanapi.RemoteCKAN("https://data.bioplatforms.com", apikey=apikey)
 query = {"type": "ausarg-pacbio-hifi"}
+query = {"sample_id": "*"}
 
 results = remote.action.package_search(
     q="+".join([f"{k}:{v}" for k, v in query.items()]), rows=50000, include_private=True
 )
+
+list_all = remote.action.package_list(rows=0, include_datasets=True, include_private=True, apikey=apikey)
+
+single_package = remote.action.package_search(
+    q="id:bpa-workshop-pp-pacbio-hifi-395385-m84073_230802_055109_s2",
+    rows=1,
+    include_private=True,
+)
+
+[
+    k
+    for k,v in single_package["results"][0].items()
+    if v == "bpa-workshop-pp-pacbio-hifi-395385-m84073_230802_055109_s2"
+]
+
 
 with open("results.json", "w") as json_file:
     json.dump(results["results"], json_file, indent=4)
@@ -87,6 +104,7 @@ results_results = copy.deepcopy(results_copy["results"])
 
 x = pd.DataFrame.from_dict(results_copy["results"])
 
+
 def flatten_ckan_results(my_results, result_dict={}):
     # if the item is a dictionary, we need to check if any of the values are dicts or lists
     if isinstance(my_results, dict):
@@ -94,7 +112,7 @@ def flatten_ckan_results(my_results, result_dict={}):
             if isinstance(v, dict):
                 flatten_ckan_results(v, result_dict)
             elif isinstance(v, list):
-                pass                
+                pass
             else:
                 result_dict[k].append(v)
 
@@ -178,3 +196,59 @@ resp = requests.get(
 file_name = chosen_resource["name"]
 with open(file_name, "wb") as handle:
     handle.write(resp.content)
+
+
+# let's download and assembly this one
+# expanded_resources[sample_id == "102.100.100/457847"]
+def get_resources_by_sample_id(sample_id, results):
+    resources = []
+    for dataset in results:
+        if dataset.get("sample_id") == sample_id:
+            resources.extend(dataset.get("resources", []))
+    return resources
+
+
+query = {"sample_id": "102.100.100/457847"}
+
+results = remote.action.package_search(
+    q="+".join([f"{k}:{v}" for k, v in query.items()]), rows=50000, include_private=True
+)
+
+sample_resources = get_resources_by_sample_id("102.100.100/457847", results["results"])
+[x.get("url") for x in sample_resources]
+
+# find something with hi-c and pacbio
+hifi_query = {"type": "ausarg-pacbio-hifi"}
+hic_query = {"type": "ausarg-hi-c"}
+
+hifi_results = remote.action.package_search(
+    q="+".join([f"{k}:{v}" for k, v in hifi_query.items()]),
+    rows=50000,
+    include_private=True,
+)
+
+hic_results = remote.action.package_search(
+    q="+".join([f"{k}:{v}" for k, v in hic_query.items()]),
+    rows=50000,
+    include_private=True,
+)
+
+hifi_samples = [x.get("sample_id") for x in hifi_results["results"]]
+hic_samples = [x.get("sample_id") for x in hic_results["results"]]
+
+samples_with_both_techs = set(hic_samples).intersection(set(hifi_samples))
+
+my_sample_id = list(samples_with_both_techs)[0]
+
+query = {"sample_id": my_sample_id}
+
+results = remote.action.package_search(
+    q="+".join([f"{k}:{v}" for k, v in query.items()]), rows=50000, include_private=True
+)
+
+sample_resources = get_resources_by_sample_id(my_sample_id, results["results"])
+[x.get("format") for x in sample_resources]
+
+sequence_file_formats = ["BAM", "FASTQ"]
+
+{x["name"]: x["url"] for x in sample_resources if x["format"] in sequence_file_formats}

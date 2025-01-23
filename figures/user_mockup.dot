@@ -1,0 +1,120 @@
+digraph {
+    fontname = "lato";
+    fontsize = "10";
+    bgcolor = "white";
+    // margin = 0;
+    compound = true;
+    splines = true;
+    // This attribute applies to the graph itself
+    // size = "1,1";
+    node [
+        fontname = "lato";
+        fontsize = "10";
+        labelloc = "b";
+        imagepos = "tc";
+        shape = none;
+        fixedsize = true;
+        height = 1.33;
+        width = 1;
+        imagescale = true;
+    ];
+    
+    
+    subgraph cluster_researcher {
+        label = "Researcher";
+        subgraph {
+            rank = same;
+            
+            sample_collection [
+                label = "Collect\nsample";
+                image = "resources/png/6816614-200.png";
+                group = main;
+            ];
+            sequencing [
+                label = "Send to\nsequencing lab";
+                image = "resources/png/6374577-200.png";
+                group = main;
+            ];
+        }
+    }
+    
+    subgraph cluster_researcher2 {
+        label = "Research community";
+        subgraph {
+            rank = same;
+            
+            use [
+                label = "Public genomes\nfor further research";
+                image = "resources/png/7322115-200.png";
+                group = main;
+            ];
+            labs [
+                label = "Apply results\nin data labs";
+                image = "resources/png/6326403-200.png";
+                group = main;
+            ];
+            
+            cite [
+                label = "Re-usable & citable\noutputs";
+                image = "resources/png/7342354-200.png";
+                group = main;
+            ];
+        }
+    }
+    
+    
+    subgraph cluster_genomeengine {
+        label = "AToL's genome engine";
+        labelloc = "b";
+        subgraph {
+            rank = same;
+            
+            data_deposit [
+                label = "Ingest\nresults";
+                image = "resources/png/6951193-200.png";
+            ];
+            
+            assembly [
+                label = "Genome\nassembly";
+                image = "resources/png/2378088-200.png";
+            ];
+            annotation [
+                label = "Genome\nannotation";
+                image = "resources/png/7322100-200.png";
+            ];
+            publication [
+                label = "Genome\nnote";
+                image = "resources/png/2094347-200.png";
+            ];
+        }
+    }
+    sample_collection -> sequencing;
+    sequencing -> data_deposit;
+    data_deposit -> assembly;
+    assembly -> annotation;
+    annotation -> publication;
+    annotation -> use [
+        constraint = false;
+    ];
+    
+    
+    annotation -> labs [
+        constraint = false;
+    ];
+    
+    
+    publication -> cite [
+        constraint = false;
+    ];
+    
+    
+    
+    use -> labs [
+        style = invis;
+    ];
+    
+    
+    labs -> cite [
+        style = invis;
+    ];
+}

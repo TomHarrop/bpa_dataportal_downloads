@@ -1,0 +1,209 @@
+digraph {
+    // viridis1 = "#440154";
+    // viridis2 = "#31688e";
+    // viridis3 = "#35b779";
+
+    fontname = "lato";
+    fontsize = "10";
+    bgcolor = transparent;
+    size = "13.33,7.5";
+    dpi = 300;
+    rankdir = LR; // Set the layout direction to left-to-right
+    compound = true;
+    splines = true;
+
+    node [
+        fontname = "lato";
+        fontsize = "10";
+        labelloc = "b";
+        imagepos = "tc";
+        shape = none;
+        fixedsize = true;
+        height = 1.33;
+        width = 1;
+        imagescale = true;
+    ];
+
+    // Inputs
+    bpapm [
+        label = "BPA PM";
+    ];
+    lab [
+        label = "Sequencing\nlab";
+    ];
+    researcher [
+        label = "Researcher";
+    ];
+
+    // BPA data portal
+ 
+    subgraph cluster_dp {
+        label = "BioPlatforms";
+        compound = true;
+        style=solid;
+        color=none;
+        subgraph cluster_dp1 {
+            label="";
+            style="dashed,rounded";
+            color="#440154"            
+        bpadb [
+                label = "Database";
+                image = "resources/png/6816614-200.png";
+            ];
+        }
+    
+    }
+
+    // AToL data management
+    subgraph cluster_dm {
+        label = "AToL\ndata mapper";
+        compound = true;
+        style=solid;
+        color=none;
+        subgraph cluster_dm1{
+            label="";
+            style="dashed,rounded";
+            color="#35b779"            
+        legacy [
+                label = "One-off\ntransformation";
+                image = "resources/png/6816614-200.png";
+            ];
+            new [
+                label = "Automated\ntransformation";
+                image = "resources/png/6374577-200.png";
+            ];
+        }
+    }
+
+    // Data broker
+    subgraph cluster_broker {
+        compound = true;
+            label="";
+            style="dashed,rounded";
+            color="#35b779"            
+
+        broker [
+            label = "Data\nbroker";
+        ];
+    }
+
+    // External DBs
+    subgraph cluster_ena {
+        label = "INSDC\ndatabases";
+        compound = true;
+        style=solid;
+        color=none;
+        subgraph cluster_ena1{
+
+            label="";
+            style="dashed,rounded";
+            color="#440154"            
+
+            bioproject [
+                label = "BioProject";
+                image = "resources/png/6816614-200.png";
+            ];
+            biosample [
+                label = "BioSample";
+                image = "resources/png/6374577-200.png";
+            ];
+            ena [
+                label = "ENA";
+                image = "resources/png/6374577-200.png";
+            ];
+        }
+    }
+
+    // Genome engine
+    subgraph cluster_ge {
+        label = "Genome engine";
+        compound = true;
+        style=solid;
+        color=none;
+
+        subgraph cluster_ge0 {
+            label = "";
+            compound = true;
+            style="dashed,rounded";
+            color="#35b779"            ;
+        subgraph cluster_ge1 {
+            label="";
+            style="dashed,rounded";
+            color="#31688e"
+            ingestion [
+                label = "Data ingestion service";
+            ];
+        }
+        subgraph cluster_ge2 {
+            label="";
+            style="dashed,rounded";
+            color="#31688e"
+
+            backend [
+                label = "AToL\nbackend";
+            ];
+            atoldb [
+                label = "AToL\ndatabase";
+            ];
+        }
+        subgraph cluster_ge3 {
+            label="";
+            style="dashed,rounded";
+            color="#31688e"
+
+            engine [
+                label = "Genome engine";
+            ];
+        }
+    }
+    }
+
+    // Website
+    subgraph cluster_website {
+        compound = true;
+            label="";
+            style="dashed,rounded";
+            color="#35b779"            
+
+        portal [
+            label = "AToL web\napplication";
+        ];
+    }
+    // Pawsey pipelines
+    subgraph cluster_pawsey {
+        label="HPC";
+        compound = true;
+        style=solid;
+        color=none;
+        subgraph cluster_pawsey2 {
+            label="";
+            style="dashed,rounded";
+            color="#440154"    
+        pipelines [
+            label = "Pipelines";
+        ];
+        }
+    }
+
+    // Edges
+    bpapm,lab,researcher -> bpadb [ lhead = cluster_dp ];
+
+    bpadb -> new [ label = "New data" ; ltail = cluster_dp];
+    bpadb -> legacy [ label = "Existing data" ; ltail = cluster_dp];
+
+    new -> broker;
+    legacy -> broker [ style = invis ];
+
+    broker -> bioproject [ ltail = cluster_broker; lhead = cluster_ena ];
+    broker -> biosample [ ltail = cluster_broker; lhead = cluster_ena ];
+    broker -> ena [ ltail = cluster_broker; lhead = cluster_ena ];
+
+    biosample, bioproject, ena -> ingestion [ /* constraint = false */ ];
+    ingestion -> backend;
+    atoldb -> engine;
+    engine -> pipelines;
+
+    backend -> portal;
+
+    researcher -> ena [ style = dashed; lhead = cluster_ena ];
+}

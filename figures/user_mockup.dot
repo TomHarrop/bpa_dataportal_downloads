@@ -2,6 +2,8 @@ digraph {
     fontname = "lato";
     fontsize = "10";
     bgcolor = "white";
+    size = "13.33,7.5";
+    dpi=300;
     // margin = 0;
     compound = true;
     splines = true;
@@ -65,12 +67,11 @@ digraph {
     
     subgraph cluster_genomeengine {
         label = "AToL's genome engine";
-        labelloc = "b";
-        subgraph {
+       subgraph {
             rank = same;
             
             data_deposit [
-                label = "Ingest\nresults";
+                label = "Raw\nsequences";
                 image = "resources/png/6951193-200.png";
             ];
             

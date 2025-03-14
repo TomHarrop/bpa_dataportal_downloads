@@ -1,0 +1,156 @@
+digraph DecisionTree {
+    size = "6.665,7.5";
+    dpi=300;
+    fontname = "lato";
+    fontsize = "10";
+    bgcolor = "white";
+    // margin = 0;
+    compound = true;
+    splines = true;
+    
+    node [
+        fontname = "lato";
+        fontsize = "12";
+        shape = box;
+        style = filled;
+        color = lightgrey;
+        // labelloc = "b";
+        // imagepos = "tc";
+        // shape = none;
+        // fixedsize = true;
+        // height = 1.33;
+        // width = 1;
+    ];
+    
+    // Define the nodes
+    
+    // Root node
+    Decision1 [
+        label = "Is there a taxonomic identifier?";
+    ];
+    
+    // Decision nodes
+    Decision2 [
+        label = "Is it an NCBI taxID?";
+    ];
+    Decision2a [
+        label = "Is there species info in the metadata?";
+    ];
+    
+    Decision3 [
+        label = "Is the taxon rank species or lower?";
+    ];
+    Decision3a [
+        label = "Can we match it to the NCBI taxonomy?";
+    ];
+    Decision4 [
+        label = "Does the taxID rank match the metadata?"
+    ]
+
+
+    // Leaf nodes
+    Species [
+        label = "It's an organism!\n(215 unique)";
+        shape = ellipse;
+        color ="#21908C80";
+    ];
+    
+    // Reject nodes
+    node [
+        image = "resources/png/7549308-512.png";
+        style = none;
+        label = "";
+        imagescale = true;
+        shape = none;
+        fixedsize = true;
+        height = 0.8;
+        width = 1;
+    ];
+    
+    Reject1;
+    Reject3;
+    Reject4;
+
+    Unknown1 [image="resources/png/3482632-512.png"];
+    
+    Reject1 -> Reject3 [style=invis];
+
+    Input1 [
+        image = "resources/png/4307209-512.png";
+        label = "Package with metadata (2208)";
+        fontname = "lato";
+        fontsize = "10";
+        labelloc = "b";
+        imagepos = "tc";
+        shape = none;
+        fixedsize = true;
+        height = 1;
+        width = 0.8;
+        imagescale = true;
+    ];
+    
+    // Define the edges
+    Input1 -> Decision1 [
+        style = "dashed";
+        constraint = false;
+    ];
+
+
+    
+    
+    Decision1 -> Decision2 [
+        label = "Yes\n1533";
+    ];
+    
+    
+    Decision1 -> Decision2a [
+        label = "No\n673";
+    ];
+    
+    
+    
+    Decision2a -> Reject1 [
+        label = "No\n428";
+    ];
+    Decision2 -> Decision2a [
+        label = "No\n10";
+    ];
+    
+    
+    Decision3a -> Reject3 [
+        label = "No\n0";
+    ];
+    Decision3 -> Reject4 [
+        label = "No\n231";
+    ];
+    Decision4 -> Unknown1[
+        label = "No\n53";
+    ];    
+    
+    Decision2 -> Decision3 [
+        label = "Yes\n1523";
+    ];
+       
+    Decision2a -> Decision3a [
+        label = "Yes\n245";
+                
+    ];    
+    
+    Decision3a -> Decision3 [
+        label = "Yes\n245";
+        fontcolor="#FDE725";
+        color="#FDE725";
+    ];
+     
+    
+    Decision3 -> Decision4 [
+        label="Yes\n1537";
+    ]
+    
+    
+    Decision4 -> Species [
+        label = "Yes\n1484";
+    ];
+
+
+}

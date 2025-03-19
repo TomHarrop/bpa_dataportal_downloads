@@ -22,6 +22,11 @@ digraph DecisionTree {
         // width = 1;
     ];
     
+    edge [
+        fontname = "lato";
+        fontsize = "12";
+]
+
     // Define the nodes
     
     // Root node

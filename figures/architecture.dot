@@ -244,7 +244,7 @@ digraph {
         ltail= cluster_ena;
         lhead=cluster_ge
     ];
-    ingestion -> backend,atoldb;
+    ingestion -> atoldb;
     atoldb -> backend[dir=both,constraint=false];
     atoldb -> engine;
     engine -> pipelines;

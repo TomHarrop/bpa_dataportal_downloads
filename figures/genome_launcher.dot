@@ -30,9 +30,11 @@ digraph snakemake_dag {
     fontsize = "10";
     ];
 
+0[label = "BPA data portal",style=""];
+0a[label = "INSDC databases",style="dashed"];
 
 subgraph cluster_dm {
-        label = "Snakemake workflow";
+        label = "Genome Engine launcher";
         labelloc="b";
         compound = true;
         style=solid;
@@ -41,23 +43,24 @@ subgraph cluster_dm {
             label="";
             style="dashed,rounded";
             color="#440154"       
-    0[label = "Query BPA data portal"];
-    1[label = "Download reads"];
-    2[label = "Format the Hi-C Dataset"];
-    3[label = "Format the PacBio Dataset"];
-    4[label = "Store the reads on Acacia"];
+    1[label = "Select datasets for assembly"];
+    2[label = "Hi-C",style=""];
+    3[label = "PacBio",style=""];
+    8[label = "Copy data to compute"];
     5[label = "Generate a YAML config"];
-    6[label = "Launch assembly on Pawsey"];
+    6[label = "Run pipelines"];
+    7[label = "Other (e.g. ONT)",style="dashed"];
+    4[label = "Format data"];
         }
 }
 
-    0a[label = "Genome engine launcher", style="dashed,rounded", color="#35b779"];
+    0->1 []
+    0a->1 [style=dashed]
+    1->2,3,5
+    2,3 -> 8
+    8 -> 4
 
-    0->1,5 [style="dashed"]
-    0a ->1:e,5:e [style="dashed",color="#35b779", ]
-    1->2,3
-    2,3 -> 4
-
+    1->7 [style=dashed]
 
     4,5 -> 6
 

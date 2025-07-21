@@ -1,0 +1,68 @@
+digraph snakemake_dag {
+
+    // viridis1 = "#440154";
+    // viridis2 = "#31688e";
+    // viridis3 = "#35b779";
+
+    fontname = "lato";
+    fontsize = "12";
+    bgcolor = transparent;
+    size = "6.66,7.5";
+    dpi = 300;
+    compound = true;
+    splines = true;
+    rankdir = LR; // Set the layout direction to left-to-right
+
+    node[
+        fontname = "lato";
+    fontsize = "12";
+    // labelloc = "b";
+    // imagepos = "tc";
+    shape = solid;
+    style="rounded";
+    color="#440154"
+    ];
+
+    edge[fontname = "lato";
+    fontsize = "10";
+    ];
+
+
+    A0[label = "BPA\ndata portal",style=""];
+
+subgraph cluster_dm {
+        label = "AToL data mapper \& broker services";
+        labelloc="t";
+        compound = true;
+        style=solid;
+        color=none;
+        subgraph cluster_dm1{
+            label="";
+            style="dashed,rounded";
+            color="#440154"       
+    B1[label = "Reads",style=""];
+    B2[label = "Metadata",style=""];
+    C2[label = "Filter\n\& map"];
+    C3[label = "Cleaned\nmetadata",style=""];
+        }
+}
+
+    D1[label = "BioProject", image = "resources/png/5079138-512.png",labelloc = "b",shape = solid,color=none, fixedsize = true;height = 1;width = 0.75;imagescale = true;imagepos = "tc";];
+    D2[label = "BioSample", image = "resources/png/5079138-512.png",labelloc = "b",shape = solid,color=none, fixedsize = true;height = 1;width = 0.75;imagescale = true;imagepos = "tc";];
+    D4[label = "ENA", image = "resources/png/5079138-512.png",labelloc = "b",shape = solid,color=none, fixedsize = true;height = 1;width = 0.75;imagescale = true;imagepos = "tc";];
+    D5[label="SRA", image = "resources/png/5079138-512.png",labelloc = "b",shape = solid,color=none, fixedsize = true;height = 1;width = 0.75;imagescale = true;imagepos = "tc";];
+
+    E1[label="Compute", style="dashed"]
+
+    p1[style=invis,shape=point,height=0]
+
+    A0->B1,B2
+    B2->C2
+    C2->C3
+    C3,B1->D4
+    D4->D1,D2,D5[dir=both]
+
+    B1->E1[label="?"]
+    E1->D5[dir=back,style="dashed",label="?"]
+
+} 

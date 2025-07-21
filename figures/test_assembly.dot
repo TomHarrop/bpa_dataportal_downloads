@@ -1,0 +1,64 @@
+digraph snakemake_dag {
+
+    // viridis1 = "#440154";
+    // viridis2 = "#31688e";
+    // viridis3 = "#35b779";
+
+    fontname = "lato";
+    fontsize = "12";
+    bgcolor = transparent;
+    size = "6.66,7.5";
+    dpi = 300;
+    compound = true;
+    splines = true;
+
+    node[
+        fontname = "lato";
+    fontsize = "12";
+    // labelloc = "b";
+    // imagepos = "tc";
+    shape = solid;
+    style="rounded";
+    color="#440154"
+    // fixedsize = true;
+    // height = 1.3;
+    // width = 1;
+    // imagescale = true;
+    ];
+
+    edge[fontname = "lato";
+    fontsize = "10";
+    ];
+
+
+subgraph cluster_dm {
+        label = "Snakemake workflow";
+        labelloc="b";
+        compound = true;
+        style=solid;
+        color=none;
+        subgraph cluster_dm1{
+            label="";
+            style="dashed,rounded";
+            color="#440154"       
+    0[label = "Query BPA data portal"];
+    1[label = "Download reads"];
+    2[label = "Format the Hi-C Dataset"];
+    3[label = "Format the PacBio Dataset"];
+    4[label = "Store the reads on Acacia"];
+    5[label = "Generate a YAML config"];
+    6[label = "Launch assembly on Pawsey"];
+        }
+}
+
+    0a[label = "Genome engine launcher", style="dashed,rounded", color="#35b779"];
+
+    0->1,5 [style="dashed"]
+    0a ->1:e,5:e [style="dashed",color="#35b779", ]
+    1->2,3
+    2,3 -> 4
+
+
+    4,5 -> 6
+
+} 

@@ -48,7 +48,7 @@ digraph {
 
     // BPA data portal
     subgraph cluster_dp {
-        label = "BioPlatforms";
+        label = "";
         compound = true;
         style=solid;
         color=none;
@@ -58,11 +58,15 @@ digraph {
             color="#440154"            
         bpadb [
             label = "Data Portal";
-            image = "resources/png/ckan-dpg.png";
-            imagepos="c"
-            height=1
+            image = "resources/png/5079138-512.png";
             ];
-        } 
+        }
+        bpa_logo [
+            label = "";
+            image = "resources/png/bioplatforms-australia-logo.png";
+            height=1;
+            imagepos="tc"
+        ]
     }
 
     // AToL data management
@@ -76,11 +80,11 @@ digraph {
             style="dashed,rounded";
             color="#35b779"            
             new [
-                label="Data mapper";
+                label="Data Mapper";
                 image = "resources/png/7455241-512.png";
             ];
                     broker [
-            label = "Data broker";
+            label = "Data Broker";
                             image = "resources/png/7626477-512.png";
 
         ];
@@ -105,13 +109,12 @@ digraph {
                 ena [
                     label = "ENA";
                     image = "resources/png/5079138-512.png";
-                    imagepos = "c";
                 ];
             }
             ena_logo [
                 label = "";
                 image = "resources/png/ENA_logo_2021.png";
-                imagepos = "t";
+                imagepos = "tc";
                 height=0.5;
             ];
         }
@@ -136,14 +139,13 @@ digraph {
             ncbi_logo [
                 label = "";
                 image = "resources/png/ncbi_blue_logo.jpg";
-                imagepos = "t";
+                imagepos = "tc";
                 height=0.6;
             ];
         }
     }
 
     // Genome engine
-
     subgraph cluster_embl {
         label="EMBL-EBI components";
         compound = true;
@@ -157,19 +159,17 @@ digraph {
         ingestion [
             label = "Data ingestion";
             image = "resources/png/7626477-512.png";
-            imagepos="c";
         ];
         portal [
-            label = "AToL portal";
+            label = "AToL Portal";
             image = "resources/png/7604611-512.png";
-            imagepos="c";
         ];
 
     }
         embl_logo [
             label = "";
             image = "resources/png/EMBL_logo_colour-1-300x144.png";
-            imagepos="t";
+            imagepos="tc";
             height=0.6;
         ];
 
@@ -202,36 +202,27 @@ digraph {
 
     // Pawsey pipelines
     subgraph cluster_pawsey {
-        label="HPC";
+        label="DToL pipelines";
         compound = true;
         style=solid;
         color=none;
         subgraph cluster_pawsey2 {
             label="";
-                style="dashed,rounded";
-                color="#31688e"            
-        pipelines [
-            label = "Pipelines";
-            image="resources/png/0ff63c76-285e-48c0-9063-d25899a425f0_collection.thumbnail";
-                    height = 1;
-        width = 1;
+            style="dashed,rounded";
+            color="#31688e"            
+            pipelines [
+                label = "genomeassembly";
+                image="resources/png/2378088-200.png";
+            ];
+        };
+        dtol_logo [
+                label = "";
+                image="resources/png/0ff63c76-285e-48c0-9063-d25899a425f0_collection.thumbnail";
+                height = 0.4;
+            ];
 
-        ];
-        }
     }
-
-    subgraph cluster_users {
-        label="";
-        compound = true;
-        style=solid;
-        color=none;
-        user1 [
-        label = "Research community";
-        style="solid,rounded"
-        colour=black
-        image="resources/png/943339-512.png"
-        ];
-    }
+    
 
     // Edges
     bpapm,lab,researcher -> bpadb [ 
@@ -242,7 +233,6 @@ digraph {
     ];
 
     new -> broker [
-        constraint=false;
         ];
 
     broker -> ena [
@@ -251,25 +241,22 @@ digraph {
     ena -> bioproject [
         constraint=false;
         style=dashed
+
     ];
 
     bioproject, taxonomy -> ingestion [ 
+        lhead=cluster_embl;
     ];
 
     ena-> ingestion [ 
         label="Metadata";
+        lhead=cluster_embl;
     ]
 
     ingestion -> atoldb;
     atoldb -> engine[
-        constraint=false
     ];
     engine -> pipelines;
 
     atoldb -> portal;
-
-    portal -> user1 [
-        dir=back
-    ];
-
  }

@@ -212,12 +212,12 @@ digraph {
             color="#31688e"            
             pipelines [
                 label = "genomeassembly";
-                image="resources/png/2378088-200.png";
+                image="resources/png/workflow-icon-7615546-512.png";
             ];
         };
         dtol_logo [
                 label = "";
-                image="resources/png/0ff63c76-285e-48c0-9063-d25899a425f0_collection.thumbnail";
+                image="resources/png/Wellcome_Sanger_Institute_Logo_Landscape_Digital_RGB_Full_Colour-768x264.png";
                 height = 0.4;
             ];
 
